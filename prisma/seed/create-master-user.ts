@@ -1,4 +1,4 @@
-import { userCreate } from '@/app/actions/user/user-create';
+import { userCreate } from '@/actions/user/user-create';
 import { prisma } from './../client';
 import { env } from '../../env';
 
