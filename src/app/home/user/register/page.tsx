@@ -1,10 +1,10 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Combobox } from "@/components/ui/combobox"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
 import { UserContext } from "@/context/UserContext"
 import { useContext } from "react"
 
@@ -114,12 +114,24 @@ export default function UserRegister() {
                             placeholder="Confirme a senha"
                             type="password"
                             icon="KeyRound" />
-                        <Combobox placeholder="Perfil" data={profiles}/>
-                        <Switch />
+                        <Combobox placeholder="Perfil" data={profiles} />
+
+                        <div className="items-top flex h-full items-center space-x-2">
+                            <Checkbox id="terms1" defaultChecked/>
+                            <div className="grid gap-1.5 leading-none w-max">
+                                <label
+                                    htmlFor="terms1"
+                                    className="text-sm text-zinc-100 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    Usuário ativo?
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <Separator className="bg-zinc-800"/>
+                <Separator className="bg-zinc-800" />
 
                 <div className="w-full flex gap-2 justify-end">
                     <Button variant='destructive' size="lg">
