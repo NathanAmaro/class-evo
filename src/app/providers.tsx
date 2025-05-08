@@ -54,7 +54,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       >
         {children}
 
-        <Toaster />
+        <Toaster position='top-right' />
       </ProgressProvider>
     </UserProvider>
   );

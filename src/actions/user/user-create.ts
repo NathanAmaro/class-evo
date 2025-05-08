@@ -81,6 +81,8 @@ export const userCreate = actionClient.schema(schema).action(async ({ parsedInpu
         }
     })
 
+    //console.log(userCellphone)
+
     // Verificando se já existe algum usuário com este número de telefone
     if (userCellphone) {
         throw new Error("Já existe um usuário com este número de telefone")
@@ -88,6 +90,7 @@ export const userCreate = actionClient.schema(schema).action(async ({ parsedInpu
 
     // Criptografando a senha
     const passwordHashed = bcrypt.hashSync(parsedInput.password, 10)
+
 
     try {
 

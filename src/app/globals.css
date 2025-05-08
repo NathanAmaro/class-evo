@@ -130,3 +130,25 @@ input::-ms-clear {
     @apply bg-background text-foreground;
   }
 }
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #3f3f46 #09090b;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #18181b;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #3f3f46;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }
