@@ -26,7 +26,8 @@ type FormInputs = {
     address_city?: string,
     address_uf?: string,
     password: string,
-    confirm_password: string
+    confirm_password: string,
+    profile: 'ADMINISTRATOR' | 'USER'
 }
 
 export default function UserRegister() {
@@ -51,6 +52,8 @@ export default function UserRegister() {
         event.preventDefault()
 
         const formData = getValues()
+
+        console.log(formData.profile)
 
         const responseUserCreateAction = await userCreateAction.executeAsync({
             name: formData.name,
@@ -228,7 +231,8 @@ export default function UserRegister() {
                             type="password"
                             icon="KeyRound"
                             errorsMessages={userCreateAction.result.validationErrors?.confirm_password?._errors} />
-                        <Combobox placeholder="Perfil" data={profiles} />
+                        
+                        <Combobox {...register("profile")} placeholder="Perfil" data={profiles} />
 
                         <div className="items-top flex h-full pt-2 space-x-2">
                             <Checkbox id="terms1" defaultChecked />

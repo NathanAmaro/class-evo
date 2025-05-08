@@ -42,6 +42,7 @@ export function Combobox({ placeholder, width = 'w-[200px]', height = 'h-[54px]'
           aria-expanded={open}
           className={`justify-between px-5 text-base md:text-sm lg:text-base rounded-lg bg-zinc-900 hover:bg-zinc-900/90 ${width} ${height}`}
         >
+          
           {value
             ?
             <>
@@ -64,7 +65,8 @@ export function Combobox({ placeholder, width = 'w-[200px]', height = 'h-[54px]'
         <Command>
           <CommandInput placeholder="Buscar..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Nenhum registro encontrado.</CommandEmpty>
+            
             <CommandGroup>
               {data.map((data) => (
                 <CommandItem
