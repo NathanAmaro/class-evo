@@ -2,11 +2,14 @@
 
 import {
     ColumnDef,
+    ColumnFiltersState,
     flexRender,
+    useReactTable,
+    SortingState,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    useReactTable
+    getSortedRowModel,
 } from "@tanstack/react-table";
 import {
     Table,
@@ -14,9 +17,10 @@ import {
     TableCell,
     TableHead,
     TableHeader,
-    TableRow
+    TableRow,
 } from "@/components/ui/table";
 import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
 
 interface DataTableProps<TData, TValue> {
@@ -26,6 +30,9 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data, isLoading }: DataTableProps<TData, TValue>) {
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
     const table = useReactTable({
         data,
         columns,
@@ -33,6 +40,12 @@ export function DataTable<TData, TValue>({ columns, data, isLoading }: DataTable
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        state: {
+            sorting,
+            columnFilters,
+        },
     })
 
     return (

@@ -11,7 +11,8 @@ import { userCreate } from "@/actions/user/user-create"
 import { useAction } from "next-safe-action/hooks"
 import { useRouter } from "@bprogress/next/app"
 import { confirmAlert } from 'react-confirm-alert'
-import { useHookFormMask } from 'use-mask-input';
+import { useHookFormMask } from 'use-mask-input'
+import { removeMaskCEP, removeMaskCPF, removeMaskCellphone } from "@/lib/remove-masks"
 
 
 interface IFormInputs {
@@ -35,8 +36,8 @@ interface IFormInputs {
 export default function UserRegisterPage() {
     const userCreateAction = useAction(userCreate)
     const router = useRouter()
-    const { handleSubmit, control, register } = useForm<IFormInputs>({ 
-        mode: "onSubmit", 
+    const { handleSubmit, control, register } = useForm<IFormInputs>({
+        mode: "onSubmit",
         defaultValues: {
             name: '',
             email: '',
@@ -75,13 +76,13 @@ export default function UserRegisterPage() {
         const responseUserCreateAction = await userCreateAction.executeAsync({
             name: data.name,
             email: data.email,
-            cellphone: data.cellphone,
-            cpf: data.cpf,
+            ...data.cellphone && { cellphone: removeMaskCellphone(data.cellphone) },
+            cpf: removeMaskCPF(data.cpf),
             address: data.address,
             address_number: data.address_number,
             address_district: data.address_district,
             address_complement: data.address_complement,
-            address_cep: data.address_cep,
+            ...data.address_cep && { address_cep: removeMaskCEP(data.address_cep) },
             address_city: data.address_city,
             address_uf: data.address_uf,
             password: data.password,
@@ -272,6 +273,7 @@ export default function UserRegisterPage() {
                             name="address_cep"
                             render={({ field }) => (
                                 <Input {...field}
+                                    {...registerWithMask('address_cep', '99999-999')}
                                     variant="zinc900"
                                     className="w-80 h-min"
                                     placeholder="CEP"
@@ -347,11 +349,11 @@ export default function UserRegisterPage() {
                             control={control}
                             name="profile"
                             render={({ field }) => (
-                                <Combobox placeholder="Perfil" 
-                                    data={profiles} 
-                                    value={field.value} 
+                                <Combobox placeholder="Perfil"
+                                    data={profiles}
+                                    value={field.value}
                                     onSelect={field.onChange}
-                                    errorsMessages={userCreateAction.result.validationErrors?.type?._errors} 
+                                    errorsMessages={userCreateAction.result.validationErrors?.type?._errors}
                                 />
                             )}
                         />
@@ -361,9 +363,9 @@ export default function UserRegisterPage() {
                                 control={control}
                                 name="active"
                                 render={({ field }) => (
-                                    <Checkbox defaultChecked 
-                                        checked={field.value} 
-                                        onCheckedChange={field.onChange} 
+                                    <Checkbox defaultChecked
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
                                         description="Usuário ativo?"
                                     />
                                 )}
@@ -376,17 +378,17 @@ export default function UserRegisterPage() {
                 <Separator className="bg-zinc-800" />
 
                 <div className="w-full flex gap-2 justify-end">
-                    <Button type="button" 
-                        className="text-zinc-950" 
-                        variant='destructive' 
+                    <Button type="button"
+                        className="text-zinc-950"
+                        variant='destructive'
                         size="lg"
-                         onClick={() => handleCancelForm()}
+                        onClick={() => handleCancelForm()}
                     >
                         Cancelar
                     </Button>
-                    <Button type="submit" 
-                        className="text-zinc-950" 
-                        size="lg" 
+                    <Button type="submit"
+                        className="text-zinc-950"
+                        size="lg"
                         isLoading={userCreateAction.isPending}
                     >
                         Salvar

@@ -9,9 +9,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Ellipsis, Pencil, Trash } from "lucide-react";
+import { Ellipsis, Pencil, Trash, ArrowUpDown } from "lucide-react";
 import { confirmAlert } from "react-confirm-alert";
 import { useRouter } from "@bprogress/next/app";
+import { addMaskCPF, addMaskProfile } from "@/lib/add-masks";
+import { Button } from "@/components/ui/button";
 
 
 export type UserDataTable = {
@@ -57,7 +59,7 @@ function ActionsButtonTable({ id }: { id: string }) {
                     Opções
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                     onClick={() => handleEditRegister()}
                     className="hover:cursor-pointer hover:bg-zinc-100 text-zinc-900"
                 >
@@ -79,21 +81,40 @@ function ActionsButtonTable({ id }: { id: string }) {
 export const columns: ColumnDef<UserDataTable>[] = [
     {
         accessorKey: "name",
-        header: "Nome"
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    size="clean"
+                    className="hover:bg-transparent hover:text-zinc-100"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Nome
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "CPF",
-        header: "CPF"
+        header: "CPF",
+        cell: ({ row }) => {
+            const user = row.original
+            return addMaskCPF(user.CPF)
+        }
     },
     {
         accessorKey: "profile",
-        header: "Perfil"
+        header: "Perfil",
+        cell: ({ row }) => {
+            const user = row.original
+            return addMaskProfile(user.profile)
+        }
     },
     {
         id: "actions",
         cell: ({ row }) => {
             const user = row.original
-
             return (
                 <ActionsButtonTable id={user.id} />
             )

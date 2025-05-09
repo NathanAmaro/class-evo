@@ -47,7 +47,7 @@ export const usersList = actionClient.action(async () => {
     // Consultado a lista de usuário completa
     const usersList = await prisma.user.findMany({
         orderBy: {
-            name: 'desc'
+            name: 'asc'
         }
     })
     

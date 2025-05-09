@@ -15,6 +15,7 @@ import { useHookFormMask } from 'use-mask-input';
 import { useEffect } from "react"
 import { userDetails } from "@/actions/user/user-details"
 import { userEdit } from "@/actions/user/user-edit"
+import { removeMaskCellphone, removeMaskCEP } from "@/lib/remove-masks"
 
 
 interface IFormInputs {
@@ -83,7 +84,7 @@ export default function UserEditPage() {
                 setValue('email', responseUserDetailsAction.data.email)
                 if (responseUserDetailsAction.data.cellphone) {
                     setValue('cellphone', responseUserDetailsAction.data.cellphone)
-                }                
+                }
                 setValue('cpf', responseUserDetailsAction.data.cpf)
                 if (responseUserDetailsAction.data.address) {
                     setValue('address', responseUserDetailsAction.data.address)
@@ -93,6 +94,9 @@ export default function UserEditPage() {
                 }
                 if (responseUserDetailsAction.data.address_district) {
                     setValue('address_district', responseUserDetailsAction.data.address_district)
+                }
+                if (responseUserDetailsAction.data.address_city) {
+                    setValue('address_city', responseUserDetailsAction.data.address_city)
                 }
                 if (responseUserDetailsAction.data.address_complement) {
                     setValue('address_complement', responseUserDetailsAction.data.address_complement)
@@ -126,17 +130,15 @@ export default function UserEditPage() {
     // Função executada ao clicar no botão salvar
     const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
 
-        console.log(data.cellphone)
-
         const responseUserEditAction = await userEditAction.executeAsync({
             id: id,
             name: data.name,
-            cellphone: data.cellphone,
+            ...data.cellphone && { cellphone: removeMaskCellphone(data.cellphone) },
             address: data.address,
             address_number: data.address_number,
             address_district: data.address_district,
             address_complement: data.address_complement,
-            address_cep: data.address_cep,
+            ...data.address_cep && { address_cep: removeMaskCEP(data.address_cep) },
             address_city: data.address_city,
             address_uf: data.address_uf,
             password: data.password,
@@ -327,6 +329,7 @@ export default function UserEditPage() {
                             name="address_cep"
                             render={({ field }) => (
                                 <Input {...field}
+                                    {...registerWithMask('address_cep', '99999-999')}
                                     variant="zinc900"
                                     className="w-80 h-min"
                                     placeholder="CEP"
