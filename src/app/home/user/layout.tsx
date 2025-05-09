@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: "classEvo - Usuários"
 };
 
-export default function HomeLayout({
+export default function UserLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

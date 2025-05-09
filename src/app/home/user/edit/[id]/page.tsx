@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 
 
-export default function UserEdit({ params }: { params: Promise<{ id: string }> }) {
+export default function UserEditPage({ params }: { params: Promise<{ id: string }> }) {
 
     useEffect(() => {
         async function fetchUserDetails() {

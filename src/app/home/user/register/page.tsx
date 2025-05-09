@@ -32,7 +32,7 @@ interface IFormInputs {
     active: boolean
 }
 
-export default function UserRegister() {
+export default function UserRegisterPage() {
     const userCreateAction = useAction(userCreate)
     const router = useRouter()
     const { handleSubmit, control, register } = useForm<IFormInputs>({ 

@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: "classEvo - Cadastro de usuários"
 };
 
-export default function HomeLayout({
+export default function UserRegisterLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

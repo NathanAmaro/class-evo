@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 
 
-export default function User() {
+export default function UserPage() {
     const router = useRouter()
     const usersListAction = useAction(usersList)
     const [tableData, setTableData] = useState<UserDataTable[]>([])
