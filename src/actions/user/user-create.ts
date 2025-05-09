@@ -9,14 +9,14 @@ import vlcpf from 'validar-cpf';
 const userCreateSchema = z.object({
     name: z.string({ message: "O nome é obrigatório." }),
     cellphone: z.string()
-        .min(11, "A quantidade de dígitos no telefone é inválida.")
-        .max(11, "A quantidade de dígitos no telefone é inválida.")
+        .min(15, "A quantidade de dígitos no telefone é inválida.")
+        .max(15, "A quantidade de dígitos no telefone é inválida.")
         .optional(),
     email: z.string({ message: "O email é obrigatório." })
         .email("O email é inválido."),
     cpf: z.string({ message: "O CPF é obrigatório." })
-        .min(11, "A quantidade de dígitos no CPF é inválida.")
-        .max(11, "A quantidade de números no CPF é inválida."),
+        .min(14, "A quantidade de dígitos no CPF é inválida.")
+        .max(14, "A quantidade de números no CPF é inválida."),
     password: z.string({ message: "A senha é obrigatória." })
         .min(8, "A senha deve ter no mínimo 8 caracteres.")
         .regex(new RegExp(/[a-zA-Z]/), 'A senha deve conter ao menos uma letra.')
@@ -80,8 +80,6 @@ export const userCreate = actionClient.schema(userCreateSchema).action(async ({ 
             cellphone: parsedInput.cellphone
         }
     })
-
-    //console.log(userCellphone)
 
     // Verificando se já existe algum usuário com este número de telefone
     if (userCellphone) {

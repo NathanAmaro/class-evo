@@ -11,6 +11,7 @@ import { userCreate } from "@/actions/user/user-create"
 import { useAction } from "next-safe-action/hooks"
 import { useRouter } from "@bprogress/next/app"
 import { confirmAlert } from 'react-confirm-alert'
+import { useHookFormMask } from 'use-mask-input';
 
 
 interface IFormInputs {
@@ -33,8 +34,28 @@ interface IFormInputs {
 
 export default function UserRegister() {
     const userCreateAction = useAction(userCreate)
-    const { handleSubmit, control } = useForm<IFormInputs>({ mode: "onSubmit", })
     const router = useRouter()
+    const { handleSubmit, control, register } = useForm<IFormInputs>({ 
+        mode: "onSubmit", 
+        defaultValues: {
+            name: '',
+            email: '',
+            cellphone: '',
+            cpf: '',
+            address: '',
+            address_number: '',
+            address_district: '',
+            address_complement: '',
+            address_cep: '',
+            address_city: '',
+            address_uf: '',
+            password: '',
+            confirm_password: '',
+            profile: "USER",
+            active: true
+        }
+    })
+    const registerWithMask = useHookFormMask(register);
 
     // Lista de opções para o combobox Perfil
     const profiles = [
@@ -160,6 +181,7 @@ export default function UserRegister() {
                             name="cellphone"
                             render={({ field }) => (
                                 <Input {...field}
+                                    {...registerWithMask('cellphone', '(99) 99999-9999')}
                                     variant="zinc900"
                                     className="w-full h-min"
                                     placeholder="Celular"
@@ -173,6 +195,7 @@ export default function UserRegister() {
                             name="cpf"
                             render={({ field }) => (
                                 <Input {...field}
+                                    {...registerWithMask('cpf', '999.999.999-99')}
                                     variant="zinc900"
                                     className="w-full h-min"
                                     placeholder="CPF do usuário"
