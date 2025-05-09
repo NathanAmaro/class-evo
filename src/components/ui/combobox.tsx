@@ -37,6 +37,11 @@ export function Combobox({ placeholder, width = 'w-[220px]', height = 'h-max', d
   const [open, setOpen] = React.useState(false)
   const [valueState, setValueState] = React.useState(value)
 
+  // Monitora o valor vindo do formulário e altera o valor do combobox quando atualiza
+  React.useEffect(() => {
+    setValueState(value)
+  }, [value])
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

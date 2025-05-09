@@ -11,7 +11,7 @@ import { Button } from "./button";
 import { Separator } from "@radix-ui/react-separator";
 
 const inputVariants = cva(
-  "flex rounded-lg justify-center items-center gap-3 flex-col",
+  "flex rounded-lg justify-center items-center gap-3 flex-col font-light",
   {
     variants: {
       variant: {
