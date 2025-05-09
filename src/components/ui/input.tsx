@@ -21,7 +21,7 @@ const inputVariants = cva(
           "bg-zinc-900 [&_.separator-errorsmessages]:bg-zinc-800/90 shadow-shape text-zinc-100 placeholder:text-zinc-500 hover:bg-zinc-900/80"
       },
       sizes: {
-        default: "py-4 px-5 text-base md:text-sm lg:text-base",
+        default: "py-3 px-5 text-base md:text-sm lg:text-base",
         md: "py-2 px-3 text-sm placeholder:text-sm [&_.icon]:size-4",
       },
     },

@@ -6,7 +6,7 @@ import { prisma } from "../../../prisma/client";
 import bcrypt from "bcrypt";
 import vlcpf from 'validar-cpf';
 
-const schema = z.object({
+const userCreateSchema = z.object({
     name: z.string({ message: "O nome é obrigatório." }),
     cellphone: z.string()
         .min(11, "A quantidade de dígitos no telefone é inválida.")
@@ -14,7 +14,7 @@ const schema = z.object({
         .optional(),
     email: z.string({ message: "O email é obrigatório." })
         .email("O email é inválido."),
-    cpf: z.string()
+    cpf: z.string({ message: "O CPF é obrigatório." })
         .min(11, "A quantidade de dígitos no CPF é inválida.")
         .max(11, "A quantidade de números no CPF é inválida."),
     password: z.string({ message: "A senha é obrigatória." })
@@ -25,7 +25,7 @@ const schema = z.object({
     confirm_password: z.string({ message: "A confirmação de senha é obrigatória." }),
     active: z.boolean()
         .default(true),
-    type: z.enum(["ADMINISTRATOR", "USER"])
+    type: z.enum(["ADMINISTRATOR", "USER"], {message: "O perfil é obrigatório."})
         .default("USER"),
     address: z.string().optional(),
     address_number: z.string().optional(),
@@ -43,7 +43,7 @@ const schema = z.object({
 /**
  * description: Action que cria um novo usuário
  */
-export const userCreate = actionClient.schema(schema).action(async ({ parsedInput }) => {
+export const userCreate = actionClient.schema(userCreateSchema).action(async ({ parsedInput }) => {
 
     // Validando o CPF
     if (!vlcpf(parsedInput.cpf)) {

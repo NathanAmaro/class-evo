@@ -5,15 +5,15 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Combobox } from "@/components/ui/combobox"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { FormEvent } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, Controller, SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 import { userCreate } from "@/actions/user/user-create"
 import { useAction } from "next-safe-action/hooks"
 import { useRouter } from "@bprogress/next/app"
 import { confirmAlert } from 'react-confirm-alert'
 
-type FormInputs = {
+
+interface IFormInputs {
     name: string,
     email: string,
     cellphone?: string,
@@ -27,12 +27,13 @@ type FormInputs = {
     address_uf?: string,
     password: string,
     confirm_password: string,
-    profile: 'ADMINISTRATOR' | 'USER'
+    profile: 'ADMINISTRATOR' | 'USER',
+    active: boolean
 }
 
 export default function UserRegister() {
-    const userCreateAction = useAction(userCreate);
-    const { register, getValues } = useForm<FormInputs>();
+    const userCreateAction = useAction(userCreate)
+    const { handleSubmit, control } = useForm<IFormInputs>({ mode: "onSubmit", })
     const router = useRouter()
 
     // Lista de opções para o combobox Perfil
@@ -48,30 +49,27 @@ export default function UserRegister() {
     ]
 
     // Função executada ao clicar no botão salvar
-    async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-
-        const formData = getValues()
-
-        console.log(formData.profile)
+    const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
 
         const responseUserCreateAction = await userCreateAction.executeAsync({
-            name: formData.name,
-            email: formData.email,
-            cellphone: formData.cellphone,
-            cpf: formData.cpf,
-            address: formData.address,
-            address_number: formData.address_number,
-            address_district: formData.address_district,
-            address_complement: formData.address_complement,
-            address_cep: formData.address_cep,
-            address_city: formData.address_city,
-            address_uf: formData.address_uf,
-            password: formData.password,
-            confirm_password: formData.confirm_password
+            name: data.name,
+            email: data.email,
+            cellphone: data.cellphone,
+            cpf: data.cpf,
+            address: data.address,
+            address_number: data.address_number,
+            address_district: data.address_district,
+            address_complement: data.address_complement,
+            address_cep: data.address_cep,
+            address_city: data.address_city,
+            address_uf: data.address_uf,
+            password: data.password,
+            confirm_password: data.confirm_password,
+            type: data.profile,
+            active: data.active
         })
 
-        // Verificando se retornou algum erro de validação na server action
+        // Verificando se retornou algum erro de validação dos campos na server action
         if (responseUserCreateAction?.validationErrors) {
             return
         }
@@ -83,7 +81,7 @@ export default function UserRegister() {
         }
 
         // Verificando se o resultado retornou como sucesso
-        if(responseUserCreateAction?.data?.success) {
+        if (responseUserCreateAction?.data?.success) {
             // Enviando mensagem para o usuário
             toast.success(responseUserCreateAction.data.success)
             // Redirecionando o usuário para a tela de visualização de usuários
@@ -120,8 +118,7 @@ export default function UserRegister() {
                     </span>
                 </div>
             </div>
-
-            <form className="w-full flex-1 flex flex-col gap-4 px-3 pb-3" onSubmit={handleFormSubmit}>
+            <form className="w-full flex-1 flex flex-col gap-4 px-3 pb-3" onSubmit={handleSubmit(onSubmit)}>
 
                 <div className="w-full flex flex-col gap-2">
                     <span className="text-zinc-100 text-xl">
@@ -129,32 +126,61 @@ export default function UserRegister() {
                     </span>
                     <Separator className="bg-zinc-800" />
                     <div className="flex w-full gap-2">
-                        <Input {...register("name")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Nome do usuário"
-                            icon="User"
-                            errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
-                        <Input {...register("email")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Email do usuários"
-                            icon="AtSign"
-                            errorsMessages={userCreateAction.result.validationErrors?.email?._errors} />
+                        <Controller
+                            control={control}
+                            name="name"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Nome do usuário"
+                                    icon="User"
+                                    errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="email"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Email do usuários"
+                                    icon="AtSign"
+                                    errorsMessages={userCreateAction.result.validationErrors?.email?._errors} />
+                            )}
+                        />
+
+
                     </div>
                     <div className="flex w-full gap-2">
-                        <Input {...register("cellphone")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Celular"
-                            icon="Smartphone"
-                            errorsMessages={userCreateAction.result.validationErrors?.cellphone?._errors} />
-                        <Input {...register("cpf")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="CPF do usuário"
-                            icon="FileDigit"
-                            errorsMessages={userCreateAction.result.validationErrors?.cpf?._errors} />
+                        <Controller
+                            control={control}
+                            name="cellphone"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Celular"
+                                    icon="Smartphone"
+                                    errorsMessages={userCreateAction.result.validationErrors?.cellphone?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="cpf"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="CPF do usuário"
+                                    icon="FileDigit"
+                                    errorsMessages={userCreateAction.result.validationErrors?.cpf?._errors} />
+                            )}
+                        />
+
                     </div>
                 </div>
 
@@ -164,50 +190,99 @@ export default function UserRegister() {
                     </span>
                     <Separator className="bg-zinc-800" />
                     <div className="flex w-full gap-2">
-                        <Input {...register("address")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Endereço"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address?._errors} />
-                        <Input {...register("address_number")}
-                            variant="zinc900"
-                            className="w-80 h-min"
-                            placeholder="Número"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address_number?._errors} />
-                        <Input {...register("address_district")}
-                            variant="zinc900"
-                            className="w-96 h-min"
-                            placeholder="Bairro"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address_district?._errors} />
+                        <Controller
+                            control={control}
+                            name="address"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Endereço"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="address_number"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-80 h-min"
+                                    placeholder="Número"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address_number?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="address_district"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-96 h-min"
+                                    placeholder="Bairro"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address_district?._errors} />
+                            )}
+                        />
+
                     </div>
                     <div className="flex w-full gap-2">
-                        <Input {...register("address_complement")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Complemento"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address_complement?._errors} />
-                        <Input {...register("address_cep")}
-                            variant="zinc900"
-                            className="w-80 h-min"
-                            placeholder="CEP"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address_cep?._errors} />
-                        <Input {...register("address_city")}
-                            variant="zinc900"
-                            className="w-md h-min"
-                            placeholder="Cidade"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address_city?._errors} />
-                        <Input {...register("address_uf")}
-                            variant="zinc900"
-                            className="w-md h-min"
-                            placeholder="Estado"
-                            icon="MapPinHouse"
-                            errorsMessages={userCreateAction.result.validationErrors?.address_uf?._errors} />
+                        <Controller
+                            control={control}
+                            name="address_complement"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Complemento"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address_complement?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="address_cep"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-80 h-min"
+                                    placeholder="CEP"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address_cep?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="address_city"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-md h-min"
+                                    placeholder="Cidade"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address_city?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="address_uf"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-md h-min"
+                                    placeholder="Estado"
+                                    icon="MapPinHouse"
+                                    errorsMessages={userCreateAction.result.validationErrors?.address_uf?._errors} />
+                            )}
+                        />
+
                     </div>
                 </div>
 
@@ -217,33 +292,59 @@ export default function UserRegister() {
                     </span>
                     <Separator className="bg-zinc-800" />
                     <div className="flex w-full gap-2">
-                        <Input {...register("password")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Escolha uma senha"
-                            type="password"
-                            icon="KeyRound"
-                            errorsMessages={userCreateAction.result.validationErrors?.password?._errors} />
-                        <Input {...register("confirm_password")}
-                            variant="zinc900"
-                            className="w-full h-min"
-                            placeholder="Confirme a senha"
-                            type="password"
-                            icon="KeyRound"
-                            errorsMessages={userCreateAction.result.validationErrors?.confirm_password?._errors} />
-                        
-                        <Combobox {...register("profile")} placeholder="Perfil" data={profiles} />
+                        <Controller
+                            control={control}
+                            name="password"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Escolha uma senha"
+                                    type="password"
+                                    icon="KeyRound"
+                                    errorsMessages={userCreateAction.result.validationErrors?.password?._errors} />
+                            )}
+                        />
 
-                        <div className="items-top flex h-full pt-2 space-x-2">
-                            <Checkbox id="terms1" defaultChecked />
-                            <div className="grid gap-1.5 leading-none w-max">
-                                <label
-                                    htmlFor="terms1"
-                                    className="text-sm text-zinc-100 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    Usuário ativo?
-                                </label>
-                            </div>
+                        <Controller
+                            control={control}
+                            name="confirm_password"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Confirme a senha"
+                                    type="password"
+                                    icon="KeyRound"
+                                    errorsMessages={userCreateAction.result.validationErrors?.confirm_password?._errors} />
+                            )}
+                        />
+
+                        <Controller
+                            control={control}
+                            name="profile"
+                            render={({ field }) => (
+                                <Combobox placeholder="Perfil" 
+                                    data={profiles} 
+                                    value={field.value} 
+                                    onSelect={field.onChange}
+                                    errorsMessages={userCreateAction.result.validationErrors?.type?._errors} 
+                                />
+                            )}
+                        />
+
+                        <div className="flex flex-col h-full pt-2">
+                            <Controller
+                                control={control}
+                                name="active"
+                                render={({ field }) => (
+                                    <Checkbox defaultChecked 
+                                        checked={field.value} 
+                                        onCheckedChange={field.onChange} 
+                                        description="Usuário ativo?"
+                                    />
+                                )}
+                            />
                         </div>
 
                     </div>
@@ -252,14 +353,24 @@ export default function UserRegister() {
                 <Separator className="bg-zinc-800" />
 
                 <div className="w-full flex gap-2 justify-end">
-                    <Button type="button" className="text-zinc-950" variant='destructive' size="lg" onClick={() => handleCancelForm()}>
+                    <Button type="button" 
+                        className="text-zinc-950" 
+                        variant='destructive' 
+                        size="lg"
+                         onClick={() => handleCancelForm()}
+                    >
                         Cancelar
                     </Button>
-                    <Button type="submit" className="text-zinc-950" size="lg" isLoading={userCreateAction.isPending}>
+                    <Button type="submit" 
+                        className="text-zinc-950" 
+                        size="lg" 
+                        isLoading={userCreateAction.isPending}
+                    >
                         Salvar
                     </Button>
                 </div>
             </form>
+
         </div>
     )
 }
