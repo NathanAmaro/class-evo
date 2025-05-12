@@ -14,6 +14,9 @@ import { confirmAlert } from "react-confirm-alert";
 import { useRouter } from "@bprogress/next/app";
 import { addMaskCPF, addMaskProfile } from "@/lib/add-masks";
 import { Button } from "@/components/ui/button";
+import { useAction } from "next-safe-action/hooks";
+import { userRemove } from "@/actions/user/user-remove";
+import { toast } from "sonner";
 
 
 export type UserDataTable = {
@@ -25,6 +28,31 @@ export type UserDataTable = {
 
 function ActionsButtonTable({ id }: { id: string }) {
     const router = useRouter()
+    const userRemoveAction = useAction(userRemove)
+
+    async function handleRemoveRegisterAction() {
+        const responseUserRemoveAction = await userRemoveAction.executeAsync({id: id})
+
+
+        // Verificando se retornou algum erro de validação dos campos na server action
+        if (responseUserRemoveAction?.validationErrors) {
+            return
+        }
+
+        // Verificando se retornou algum erro interno na server action
+        if (responseUserRemoveAction?.serverError) {
+            toast(responseUserRemoveAction.serverError)
+            return
+        }
+
+        // Verificando se o resultado retornou como sucesso
+        if (responseUserRemoveAction?.data?.success) {
+            // Enviando mensagem para o usuário
+            toast.success(responseUserRemoveAction.data.success)
+            // Redirecionando o usuário para a tela de visualização de usuários
+            router.refresh()
+        }
+    }
 
     // Função executada ao clicar no botão editar
     function handleEditRegister() {
@@ -39,7 +67,7 @@ function ActionsButtonTable({ id }: { id: string }) {
             buttons: [
                 {
                     label: 'Sim',
-                    onClick: () => alert(id)
+                    onClick: () => handleRemoveRegisterAction()
                 },
                 {
                     label: 'Não'
