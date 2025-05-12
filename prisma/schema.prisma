@@ -31,8 +31,34 @@ model User {
   address_district   String?
   address_city       String?
   address_uf         String?
+  created_at         DateTime  @default(now())
+  schools            School[]
 
   @@map("users")
+}
+
+model School {
+  // Tabela de escolas
+
+  id                 String   @id @default(uuid())
+  name               String
+  cnpj               String
+  address            String
+  address_number     String
+  address_cep        String
+  address_complement String?
+  address_district   String
+  address_city       String
+  address_uf         String
+  name_director      String?
+  name_vice_director String?
+  name_secretary     String?
+  name_coordinator   String?
+  created_at         DateTime @default(now())
+  user               User     @relation(fields: [user_id], references: [id])
+  user_id            String
+
+  @@map("schools")
 }
 
 enum UserTypes {
