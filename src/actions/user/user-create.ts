@@ -4,7 +4,7 @@ import { z } from "zod";
 import { actionClient } from "@/lib/safe-action";
 import { prisma } from "../../../prisma/client";
 import bcrypt from "bcrypt";
-import vlcpf from 'validar-cpf';
+import { cpf } from 'cpf-cnpj-validator';
 
 const userCreateSchema = z.object({
     name: z.string({ message: "O nome é obrigatório." }),
@@ -46,7 +46,7 @@ const userCreateSchema = z.object({
 export const userCreate = actionClient.schema(userCreateSchema).action(async ({ parsedInput }) => {
 
     // Validando o CPF
-    if (!vlcpf(parsedInput.cpf)) {
+    if (!cpf.isValid(parsedInput.cpf)) {
         throw new Error("O CPF é inválido.")
     }
 

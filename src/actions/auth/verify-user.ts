@@ -5,10 +5,10 @@ import { actionClient } from "@/lib/safe-action";
 import { prisma } from "../../../prisma/client";
 import { env } from "../../../env";
 import * as jose from "jose";
+import { redirect } from "next/navigation";
 
 const schema = z.object({
     token: z.string()
-        .nonempty("A senha é obrigatória.")
 });
 
 
@@ -44,6 +44,7 @@ export const verifyUser = actionClient.schema(schema).action(async ({ parsedInpu
         // Retornando os dados do usuário
         return {
             user: {
+                id: userConsult.id,
                 name: userConsult.name,
                 type: userConsult.type
             }
@@ -51,6 +52,8 @@ export const verifyUser = actionClient.schema(schema).action(async ({ parsedInpu
 
     } catch (e) {
         console.log(e)
-        throw new Error("A verificação do token falhou.")
+        
+        // Verificando se o action retornou algum erro e redirecionando para a página login
+        redirect('/login')
     }
 })
