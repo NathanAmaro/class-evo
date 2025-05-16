@@ -12,7 +12,7 @@ import { useAction } from "next-safe-action/hooks"
 import { useRouter } from "@bprogress/next/app"
 import { confirmAlert } from 'react-confirm-alert'
 import { useHookFormMask } from 'use-mask-input'
-import { removeMaskCEP, removeMaskCPF, removeMaskCellphone } from "@/lib/remove-masks"
+import { removeMaskCEP, removeMaskCellphone } from "@/lib/remove-masks"
 
 
 interface IFormInputs {
@@ -77,7 +77,7 @@ export default function SchoolRegisterPage() {
             name: data.name,
             email: data.email,
             ...data.cellphone && { cellphone: removeMaskCellphone(data.cellphone) },
-            cpf: removeMaskCPF(data.cpf),
+            cpf: data.cpf,
             address: data.address,
             address_number: data.address_number,
             address_district: data.address_district,
@@ -119,7 +119,7 @@ export default function SchoolRegisterPage() {
             buttons: [
                 {
                     label: 'Sim',
-                    onClick: () => router.push('/home/user')
+                    onClick: () => router.push('/home/school')
                 },
                 {
                     label: 'Não'
@@ -133,10 +133,10 @@ export default function SchoolRegisterPage() {
             <div className="w-full flex justify-between">
                 <div className="h-full flex flex-col">
                     <span className="text-3xl text-zinc-100">
-                        Usuários
+                        Escolas
                     </span>
                     <span className="text-xl text-zinc-400">
-                        Cadastro de usuários
+                        Cadastro de escolas
                     </span>
                 </div>
             </div>

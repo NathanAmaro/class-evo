@@ -38,24 +38,27 @@ export const schoolCreate = actionClient.schema(schoolCreateSchema).action(async
     // Consultando o usuário através do token
     const verifyUserResponse = await verifyUser({ token: userToken })
 
-    // Validar o CEP
-
     // Validando o CNPJ
     if (!cnpj.isValid(parsedInput.cnpj)) {
         throw new Error("O CNPJ é inválido.")
     }
 
-    // Consultando se já existe algum usuário com esse CPF
-    const schoolCNPJ = await prisma.school.findUnique({
+    // Consultando se já existe alguma escola com esse CNPJ para o usuário
+    const schoolCNPJ = await prisma.school.findFirst({
         where: {
-            cpf: parsedInput.cpf
+            user_id: verifyUserResponse?.data?.user.id,
+            cnpj: parsedInput.cnpj
         }
     })
 
-    // Verificando se já existe algum usuário com o CPF
-    if (userCPF) {
-        throw new Error("Já existe um usuário com este CPF.")
+    // Verificando se já existe alguma escola com esse CNPJ para o usuário
+    if (schoolCNPJ) {
+        throw new Error("Já existe uma escola com este CNPJ para este usuário.")
     }
+
+    
+
+
 
     // Consultando se já existe algum usuário com esse email
     const userEmail = await prisma.user.findUnique({

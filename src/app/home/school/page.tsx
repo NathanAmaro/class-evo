@@ -46,15 +46,15 @@ export default function SchoolPage() {
             <div className="w-full flex justify-between">
                 <div className="h-full flex flex-col">
                     <span className="text-3xl text-zinc-100">
-                        Usuários
+                        Escolas
                     </span>
                     <span className="text-xl text-zinc-400">
-                        Visualização de usuários
+                        Visualização de escolas
                     </span>
                 </div>
 
-                <Button onClick={() => router.push('/home/user/register')}>
-                    Cadastrar novo usuário
+                <Button onClick={() => router.push('/home/school/register')}>
+                    Cadastrar nova escola
                 </Button>
             </div>
 

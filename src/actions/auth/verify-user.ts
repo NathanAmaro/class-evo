@@ -5,7 +5,6 @@ import { actionClient } from "@/lib/safe-action";
 import { prisma } from "../../../prisma/client";
 import { env } from "../../../env";
 import * as jose from "jose";
-import { redirect } from "next/navigation";
 
 const schema = z.object({
     token: z.string()
@@ -22,12 +21,12 @@ export const verifyUser = actionClient.schema(schema).action(async ({ parsedInpu
 
     try {
         // Decodificando o token
-        const tokenDecoded = await jose.jwtVerify(parsedInput.token, secret)
+        const tokenDecoded: jose.JWTVerifyResult<{user: string, iat: number, exp: number}> = await jose.jwtVerify(parsedInput.token, secret)
 
         // Consultando o id do usuário no banco de dados
         const userConsult = await prisma.user.findUnique({
             where: {
-                id: tokenDecoded.payload.user as string
+                id: tokenDecoded.payload.user
             }
         })
 
@@ -52,8 +51,6 @@ export const verifyUser = actionClient.schema(schema).action(async ({ parsedInpu
 
     } catch (e) {
         console.log(e)
-        
-        // Verificando se o action retornou algum erro e redirecionando para a página login
-        redirect('/login')
+        throw new Error('Ocorreu um erro ao verificar o usuário.')
     }
 })

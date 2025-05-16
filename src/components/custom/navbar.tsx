@@ -29,7 +29,7 @@ function UniqueOption({ link, title, icon }: UniqueOpt) {
   return (
     <div onClick={() => router.push(link)}
       className="flex w-full h-10 justify-start items-end gap-2 text-zinc-100 py-2 pl-3 text-sm rounded-sm shadow-shape bg-zinc-800 hover:cursor-pointer hover:bg-zinc-800/60">
-      <Icon className="text-zinc-100" />
+      <Icon className="text-zinc-100" strokeWidth={1.5}/>
       <span className="text-zinc-100">
         {title}
       </span>
@@ -59,7 +59,7 @@ function CollapsibleOption({ title, icon, options }: React.ComponentProps<"div">
 
       <CollapsibleTrigger className="text-zinc-100 w-full flex m-0 data-[state=open]:[&_.arrow]:rotate-180 hover:cursor-pointer ">
         <div className="flex w-full items-end gap-2">
-          <Icon className="text-zinc-100 w-6" />
+          <Icon className="text-zinc-100 w-6" strokeWidth={1.5}/>
           <span className="text-sm mb-[1px]">
             {title}
           </span>
@@ -119,6 +119,8 @@ export function Navbar() {
       <div className="h-full w-full flex flex-col gap-3">
 
         {user.type === 'ADMINISTRATOR' && <UniqueOption title="Usuários" link="/home/user" icon="User" />}
+
+        <UniqueOption title="Escolas" link="/home/school" icon="School" />
 
         <CollapsibleOption title="Avaliações EDI" icon="User" options={avaliacaoEDIOptions} />
       </div>

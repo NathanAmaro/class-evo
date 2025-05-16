@@ -1,12 +1,5 @@
 
 /**
- * @description Função que remove máscara do CPF
- */
-export function removeMaskCPF(cpf: string) {
-    return cpf.replaceAll('.', '').replaceAll('-', '')
-}
-
-/**
  * @description Função que remove máscara do número do celular
  */
 export function removeMaskCellphone(cellphone: string) {

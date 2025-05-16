@@ -12,7 +12,8 @@ import {
 import { Ellipsis, Pencil, Trash, ArrowUpDown } from "lucide-react";
 import { confirmAlert } from "react-confirm-alert";
 import { useRouter } from "@bprogress/next/app";
-import { addMaskCPF, addMaskProfile } from "@/lib/add-masks";
+import { addMaskProfile } from "@/lib/add-masks";
+import { cpf } from "cpf-cnpj-validator";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { userRemove } from "@/actions/user/user-remove";
@@ -128,7 +129,7 @@ export const columns: ColumnDef<UserDataTable>[] = [
         header: "CPF",
         cell: ({ row }) => {
             const user = row.original
-            return addMaskCPF(user.CPF)
+            return cpf.format(user.CPF)
         }
     },
     {

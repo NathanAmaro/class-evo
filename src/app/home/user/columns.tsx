@@ -50,7 +50,6 @@ function ActionsButtonTable({ id }: { id: string }) {
         if (responseUserRemoveAction?.data?.success) {
             // Enviando mensagem para o usuário
             toast.success(responseUserRemoveAction.data.success)
-            // Redirecionando o usuário para a tela de visualização de usuários
             router.refresh()
         }
     }

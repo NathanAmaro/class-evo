@@ -12,7 +12,8 @@ import { useAction } from "next-safe-action/hooks"
 import { useRouter } from "@bprogress/next/app"
 import { confirmAlert } from 'react-confirm-alert'
 import { useHookFormMask } from 'use-mask-input'
-import { removeMaskCEP, removeMaskCPF, removeMaskCellphone } from "@/lib/remove-masks"
+import { cpf } from "cpf-cnpj-validator"
+import { removeMaskCEP, removeMaskCellphone } from "@/lib/remove-masks"
 
 
 interface IFormInputs {
@@ -77,7 +78,7 @@ export default function UserRegisterPage() {
             name: data.name,
             email: data.email,
             ...data.cellphone && { cellphone: removeMaskCellphone(data.cellphone) },
-            cpf: removeMaskCPF(data.cpf),
+            cpf: cpf.strip(data.cpf),
             address: data.address,
             address_number: data.address_number,
             address_district: data.address_district,
