@@ -58,15 +58,23 @@ export default function SchoolRegisterPage() {
     })
     const registerWithMask = useHookFormMask(register);
 
-    // Lista de opções para o combobox Perfil
-    const profiles = [
+    // Lista de opções para o combobox de Esferas Escolar
+    const spheres = [
         {
-            label: 'Administrador',
-            value: 'ADMINISTRATOR'
+            label: 'Municipal',
+            value: 'MUNICIPAL'
         },
         {
-            label: 'Usuário',
-            value: 'USER'
+            label: 'Estadual',
+            value: 'ESTADUAL'
+        },
+        {
+            label: 'Federal',
+            value: 'FEDERAL'
+        },
+        {
+            label: 'Militar',
+            value: 'MILITAR'
         }
     ]
 
@@ -136,7 +144,7 @@ export default function SchoolRegisterPage() {
                         Escolas
                     </span>
                     <span className="text-xl text-zinc-400">
-                        Cadastro de escolas
+                        Cadastro de escola
                     </span>
                 </div>
             </div>
@@ -144,7 +152,7 @@ export default function SchoolRegisterPage() {
 
                 <div className="w-full flex flex-col gap-2">
                     <span className="text-zinc-100 text-xl">
-                        Dados pessoais
+                        Dados básicos
                     </span>
                     <Separator className="bg-zinc-800" />
                     <div className="flex w-full gap-2">
@@ -155,21 +163,21 @@ export default function SchoolRegisterPage() {
                                 <Input {...field}
                                     variant="zinc900"
                                     className="w-full h-min"
-                                    placeholder="Nome do usuário"
-                                    icon="User"
+                                    placeholder="Nome da escola"
+                                    icon="Text"
                                     errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
                             )}
                         />
 
                         <Controller
                             control={control}
-                            name="email"
+                            name="cnpj"
                             render={({ field }) => (
                                 <Input {...field}
                                     variant="zinc900"
                                     className="w-full h-min"
-                                    placeholder="Email do usuários"
-                                    icon="AtSign"
+                                    placeholder="CNPJ da escola"
+                                    icon="FileDigit"
                                     errorsMessages={userCreateAction.result.validationErrors?.email?._errors} />
                             )}
                         />
@@ -193,15 +201,14 @@ export default function SchoolRegisterPage() {
 
                         <Controller
                             control={control}
-                            name="cpf"
+                            name="spheres"
                             render={({ field }) => (
-                                <Input {...field}
-                                    {...registerWithMask('cpf', '999.999.999-99')}
-                                    variant="zinc900"
-                                    className="w-full h-min"
-                                    placeholder="CPF do usuário"
-                                    icon="FileDigit"
-                                    errorsMessages={userCreateAction.result.validationErrors?.cpf?._errors} />
+                                <Combobox placeholder="Esfera escolar"
+                                    data={spheres}
+                                    value={field.value}
+                                    onSelect={field.onChange}
+                                    errorsMessages={userCreateAction.result.validationErrors?.type?._errors}
+                                />
                             )}
                         />
 
@@ -210,7 +217,7 @@ export default function SchoolRegisterPage() {
 
                 <div className="w-full flex flex-col gap-2">
                     <span className="text-zinc-100 text-xl">
-                        Endereço do usuário
+                        Endereço da escola
                     </span>
                     <Separator className="bg-zinc-800" />
                     <div className="flex w-full gap-2">
@@ -313,64 +320,67 @@ export default function SchoolRegisterPage() {
 
                 <div className="w-full flex flex-col gap-2">
                     <span className="text-zinc-100 text-xl">
-                        Segurança e privacidade
+                        Informações complementares
                     </span>
                     <Separator className="bg-zinc-800" />
                     <div className="flex w-full gap-2">
                         <Controller
                             control={control}
-                            name="password"
+                            name="name"
                             render={({ field }) => (
                                 <Input {...field}
                                     variant="zinc900"
                                     className="w-full h-min"
-                                    placeholder="Escolha uma senha"
-                                    type="password"
-                                    icon="KeyRound"
-                                    errorsMessages={userCreateAction.result.validationErrors?.password?._errors} />
+                                    placeholder="Nome do(a) diretor(a)"
+                                    icon="User"
+                                    errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
                             )}
                         />
 
                         <Controller
                             control={control}
-                            name="confirm_password"
+                            name="name"
                             render={({ field }) => (
                                 <Input {...field}
                                     variant="zinc900"
                                     className="w-full h-min"
-                                    placeholder="Confirme a senha"
-                                    type="password"
-                                    icon="KeyRound"
-                                    errorsMessages={userCreateAction.result.validationErrors?.confirm_password?._errors} />
+                                    placeholder="Nome do(a) vice-diretor(a)"
+                                    icon="User"
+                                    errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
+                            )}
+                        />
+
+                        
+
+                    </div>
+                    <div className="flex w-full gap-2">
+                        <Controller
+                            control={control}
+                            name="name"
+                            render={({ field }) => (
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Nome do(a) secretário(a)"
+                                    icon="User"
+                                    errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
                             )}
                         />
 
                         <Controller
                             control={control}
-                            name="profile"
+                            name="name"
                             render={({ field }) => (
-                                <Combobox placeholder="Perfil"
-                                    data={profiles}
-                                    value={field.value}
-                                    onSelect={field.onChange}
-                                    errorsMessages={userCreateAction.result.validationErrors?.type?._errors}
-                                />
+                                <Input {...field}
+                                    variant="zinc900"
+                                    className="w-full h-min"
+                                    placeholder="Nome do(a) coordenador(a)"
+                                    icon="User"
+                                    errorsMessages={userCreateAction.result.validationErrors?.name?._errors} />
                             )}
                         />
 
-                        <div className="flex flex-col h-full pt-2">
-                            <Controller
-                                control={control}
-                                name="active"
-                                render={({ field }) => (
-                                    <Checkbox defaultChecked
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                        description="Usuário ativo?"
-                                    />
-                                )}
-                            />
-                        </div>
+                        
 
                     </div>
                 </div>

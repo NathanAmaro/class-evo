@@ -40,9 +40,11 @@ model User {
 model School {
   // Tabela de escolas
 
-  id                 String   @id @default(uuid())
+  id                 String        @id @default(uuid())
   name               String
   cnpj               String
+  sphere             SchoolSpheres
+  cellphone          String?
   address            String
   address_number     String
   address_cep        String
@@ -54,8 +56,8 @@ model School {
   name_vice_director String?
   name_secretary     String?
   name_coordinator   String?
-  created_at         DateTime @default(now())
-  user               User     @relation(fields: [user_id], references: [id])
+  created_at         DateTime      @default(now())
+  user               User          @relation(fields: [user_id], references: [id])
   user_id            String
 
   @@map("schools")
@@ -68,4 +70,15 @@ enum UserTypes {
   USER
 
   @@map("user_types")
+}
+
+enum SchoolSpheres {
+  // Esferas escolar
+
+  MUNICIPAL
+  ESTADUAL
+  FEDERAL
+  MILITAR
+
+  @@map("school_spheres")
 }
